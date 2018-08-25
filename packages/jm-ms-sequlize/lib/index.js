@@ -31,46 +31,48 @@ module.exports = function (dao, opts = {}) {
     let include = opts.include || optsList.include || null
     let order = opts.order || optsList.order || null
     let fields = opts.fields || optsList.fields || null
+    let lean = opts.lean || optsList.lean || null
     let transaction = opts.transaction
-    let lean = true
-    if (opts.lean === false) {
-      lean = false
-    } else if (optsList.lean === false) {
-      lean = false
-    }
 
     let o = {
       where: conditions,
       include: include,
       order: order,
-      raw: lean
     }
-
+    lean && (o.raw = true)
     fields && (o.attributes = fields)
     transaction && (o.transaction = transaction)
 
-    if (page || rows) {
-      let page = Number(opts.page) || 1
-      let rows = Number(opts.rows) || 10
-      o.offset = (page - 1) * rows
-      o.limit = rows
-      doc = await dao.findAndCount(o)
-      let total = doc.count
-      let pages = Math.ceil(total / rows)
-      doc = {
-        page: page,
-        pages: pages,
-        total: total,
-        rows: doc.rows
+    let error
+    try {
+      if (page || rows) {
+        let page = Number(opts.page) || 1
+        let rows = Number(opts.rows) || 10
+        o.offset = (page - 1) * rows
+        o.limit = rows
+        doc = await dao.findAndCount(o)
+        let total = doc.count
+        let pages = Math.ceil(total / rows)
+        doc = {
+          page: page,
+          pages: pages,
+          total: total,
+          rows: doc.rows
+        }
+      } else {
+        doc = await dao.findAll(o)
+        doc = {rows: doc}
       }
-    } else {
-      doc = await dao.findAll(o)
-      doc = {rows: doc}
+    } catch (e) {
+      console.log(e)
+      error = e
+      doc = e
     }
 
     let ret = doc
     doc = await dao.emit('list', opts, doc)
     if (doc !== undefined) return doc
+    if (error) throw error
     if (ret) return ret
   }
 
@@ -80,30 +82,37 @@ module.exports = function (dao, opts = {}) {
 
     let id = opts.params.id
     let optsGet = _.cloneDeep(routes.opts.get)
-    let conditions = opts.conditions || optsGet.conditions || null
+    let conditions = opts.conditions || optsGet.conditions || {}
     let include = opts.include || optsGet.include || null
     let order = opts.order || optsGet.order || null
     let fields = opts.fields || optsGet.fields || null
+    let lean = opts.lean || optsGet.lean || null
     let transaction = opts.transaction
-    let lean = true
-    if (opts.lean === false) {
-      lean = false
-    } else if (optsGet.lean === false) {
-      lean = false
-    }
 
-    doc = await dao.findById(id, {
+    conditions = {id, ...conditions}
+
+    let o = {
       where: conditions,
-      attributes: fields,
       include: include,
-      order: order,
-      raw: lean,
-      transaction: transaction
-    })
+      order: order
+    }
+    lean && (o.raw = true)
+    fields && (o.attributes = fields)
+    transaction && (o.transaction = transaction)
+
+    let error
+    try {
+      doc = await dao.findOne(o)
+    } catch (e) {
+      console.log(e)
+      error = e
+      doc = e
+    }
 
     let ret = doc
     doc = await dao.emit('get', opts, doc)
     if (doc !== undefined) return doc
+    if (error) throw error
     if (ret) return ret
   }
 
@@ -114,11 +123,19 @@ module.exports = function (dao, opts = {}) {
     let transaction = opts.transaction
 
     let data = opts.data
-    doc = await dao.create(data, {transaction})
+    let error
+    try {
+      doc = await dao.create(data, {transaction})
+    } catch (e) {
+      console.log(e)
+      error = e
+      doc = e
+    }
 
     let ret = doc
     doc = await dao.emit('create', opts, doc)
     if (doc !== undefined) return doc
+    if (error) throw error
     if (ret) return ret
   }
 
@@ -130,11 +147,19 @@ module.exports = function (dao, opts = {}) {
 
     let id = opts.params.id
     let data = opts.data
-    doc = await dao.update(data, {where: {id: id}, transaction})
+    let error
+    try {
+      doc = await dao.update(data, {where: {id: id}, transaction})
+    } catch (e) {
+      console.log(e)
+      error = e
+      doc = e
+    }
 
     let ret = doc
     doc = await dao.emit('update', opts, doc)
     if (doc !== undefined) return doc
+    if (error) throw error
     if (ret) return {ret: ret[0]}
   }
 
@@ -149,11 +174,20 @@ module.exports = function (dao, opts = {}) {
     } else {
       id = id.split(',')
     }
-    doc = await dao.destroy({where: {id: {[Op.in]: id}}, transaction})
+
+    let error
+    try {
+      doc = await dao.destroy({where: {id: {[Op.in]: id}}, transaction})
+    } catch (e) {
+      console.log(e)
+      error = e
+      doc = e
+    }
 
     let ret = doc
     doc = await dao.emit('remove', opts, doc)
     if (doc !== undefined) return doc
+    if (error) throw error
     if (ret) return {ret: ret}
   }
 
