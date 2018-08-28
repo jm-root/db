@@ -32,6 +32,7 @@ module.exports = function (dao, opts = {}) {
     let order = opts.order || optsList.order || null
     let fields = opts.fields || optsList.fields || null
     let lean = opts.lean || optsList.lean || null
+    let distinct = opts.distinct || optsList.distinct || null
     let transaction = opts.transaction
 
     let o = {
@@ -42,6 +43,7 @@ module.exports = function (dao, opts = {}) {
     lean && (o.raw = true)
     fields && (o.attributes = fields)
     transaction && (o.transaction = transaction)
+    distinct && (o.distinct = distinct)
 
     let error
     try {
@@ -50,7 +52,7 @@ module.exports = function (dao, opts = {}) {
         let rows = Number(opts.rows) || 10
         o.offset = (page - 1) * rows
         o.limit = rows
-        doc = await dao.findAndCount(o)
+        doc = await dao.findAndCountAll(o)
         let total = doc.count
         let pages = Math.ceil(total / rows)
         doc = {
