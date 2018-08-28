@@ -1,6 +1,6 @@
 {
   "name": "jm-ms-sequlize",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "mongoose router plugin for jm-ms",
   "main": "./lib/index",
   "scripts": {
