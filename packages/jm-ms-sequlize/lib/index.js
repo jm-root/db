@@ -32,13 +32,16 @@ module.exports = function (dao, opts = {}) {
     let order = opts.order || optsList.order || null
     let fields = opts.fields || optsList.fields || null
     let lean = opts.lean || optsList.lean || null
+    let plain = true
+    optsList.plain === false && (plain = false)
+    opts.plain === false && (plain = false)
     let distinct = opts.distinct || optsList.distinct || null
     let transaction = opts.transaction
 
     let o = {
       where: conditions,
       include: include,
-      order: order,
+      order: order
     }
     lean && (o.raw = true)
     fields && (o.attributes = fields)
@@ -71,6 +74,13 @@ module.exports = function (dao, opts = {}) {
       doc = e
     }
 
+    if (plain !== false && doc.rows) {
+      let rows = []
+      doc.rows.forEach(item => {
+        rows.push(item.get({plain: true}))
+      })
+      doc.rows = rows
+    }
     let ret = doc
     doc = await dao.emit('list', opts, doc)
     if (doc !== undefined) return doc
@@ -89,6 +99,9 @@ module.exports = function (dao, opts = {}) {
     let order = opts.order || optsGet.order || null
     let fields = opts.fields || optsGet.fields || null
     let lean = opts.lean || optsGet.lean || null
+    let plain = true
+    optsGet.plain === false && (plain = false)
+    opts.plain === false && (plain = false)
     let transaction = opts.transaction
 
     conditions = {id, ...conditions}
@@ -111,6 +124,7 @@ module.exports = function (dao, opts = {}) {
       doc = e
     }
 
+    if (plain !== false && doc) doc = doc.get({plain: true})
     let ret = doc
     doc = await dao.emit('get', opts, doc)
     if (doc !== undefined) return doc
