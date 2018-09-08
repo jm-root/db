@@ -7,7 +7,6 @@ beforeAll(async () => {
 
 let id = null
 describe('router', async () => {
-
   test('list', async () => {
     let doc = await router.get('/')
     console.log(doc)
@@ -22,15 +21,15 @@ describe('router', async () => {
         content: '内容'
       })
     id = doc.id
-    console.log(doc.get({plain: true}))
+
     expect(doc).toBeTruthy()
   })
 
   test('list', async () => {
     let doc = await router.get('/', {
-        page: 1,
-        rows: 10
-      })
+      page: 1,
+      rows: 10
+    })
     console.log(doc)
     expect(doc).toBeTruthy()
   })

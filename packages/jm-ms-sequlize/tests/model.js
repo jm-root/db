@@ -25,7 +25,16 @@ let DB = function (opts = {}) {
   return new Sequelize(opts.db, o)
 }
 
-let sequelize = DB({db:'mysql://root:123@localhost/test'})
+let sequelize = DB({db: 'mysql://root:123@localhost/test'})
+let Query = sequelize.dialect.Query
+Query.prototype.__formatError__ = Query.prototype.formatError
+Query.prototype.formatError = function (err) {
+  try {
+    return this.__formatError__(err)
+  } catch (e) {
+    return err
+  }
+}
 sequelize
   .sync()
   .then(() => {
@@ -33,7 +42,7 @@ sequelize
   })
 
 const model = sequelize.define('topic', {
-  title: {type: Sequelize.STRING},
+  title: {type: Sequelize.STRING, allowNull: false, unique: true},
   content: {type: Sequelize.STRING}
 }, {
   tableName: 'topic',
@@ -43,5 +52,3 @@ const model = sequelize.define('topic', {
 })
 
 module.exports = model
-
-
