@@ -51,8 +51,8 @@ module.exports = function (dao, opts = {}) {
     let error
     try {
       if (page || rows) {
-        let page = Number(opts.page) || 1
-        let rows = Number(opts.rows) || 10
+        page = Number(page) || 1
+        rows = Number(rows) || 10
         o.offset = (page - 1) * rows
         o.limit = rows
         doc = await dao.findAndCountAll(o)
