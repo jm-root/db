@@ -204,7 +204,7 @@ module.exports = function (dao, opts = {}) {
     doc = await dao.emit('remove', opts, doc)
     if (doc !== undefined) return doc
     if (error) throw error
-    if (ret) return {ret: ret}
+    if (ret !== undefined) return {ret: ret}
   }
 
   router.use(opts => {
