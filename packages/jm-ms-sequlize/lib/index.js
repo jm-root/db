@@ -32,6 +32,7 @@ module.exports = function (dao, opts = {}) {
     let order = opts.order || optsList.order || null
     let fields = opts.fields || optsList.fields || null
     let lean = opts.lean || optsList.lean || null
+    let ext = opts.ext || optsList.ext || null
     let plain = true
     optsList.plain === false && (plain = false)
     opts.plain === false && (plain = false)
@@ -47,6 +48,8 @@ module.exports = function (dao, opts = {}) {
     fields && (o.attributes = fields)
     transaction && (o.transaction = transaction)
     distinct && (o.distinct = distinct)
+
+    ext && (Object.assign(o, ext))
 
     let error
     try {
@@ -99,6 +102,7 @@ module.exports = function (dao, opts = {}) {
     let order = opts.order || optsGet.order || null
     let fields = opts.fields || optsGet.fields || null
     let lean = opts.lean || optsGet.lean || null
+    let ext = opts.ext || optsGet.ext || null
     let plain = true
     optsGet.plain === false && (plain = false)
     opts.plain === false && (plain = false)
@@ -114,6 +118,8 @@ module.exports = function (dao, opts = {}) {
     lean && (o.raw = true)
     fields && (o.attributes = fields)
     transaction && (o.transaction = transaction)
+
+    ext && (Object.assign(o, ext))
 
     let error
     try {
