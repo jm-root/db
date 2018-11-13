@@ -24,7 +24,8 @@ describe('router', async () => {
       '/',
       {
         page: 1,
-        rows: 10
+        rows: 10,
+        sorter: '-crtime, _id'
       })
     console.log(doc)
     expect(doc).toBeTruthy()

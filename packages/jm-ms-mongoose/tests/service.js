@@ -4,7 +4,8 @@ const $ = require('../lib')
 service.router = $(service, {
   list: {
     fields: {
-      title: 1
+      title: 1,
+      crtime: 1
     }
   },
   get: {

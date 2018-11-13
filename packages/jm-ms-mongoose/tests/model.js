@@ -1,8 +1,7 @@
-const jm = require('jm-dao')
-var mongoose = require('mongoose')
-var Schema = mongoose.Schema
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-var schemaDefine = {
+const schemaDefine = {
   title: {type: String},
   content: {type: String},
   tags: [{type: String}],
@@ -15,19 +14,13 @@ var schemaDefine = {
     }]
   }],
   isHtml: {type: Boolean, default: false},
-  crtime: {type: Date},
+  crtime: {type: Date, default: Date.now},
   ext: Schema.Types.Mixed
 }
 
-var schema = new Schema(schemaDefine)
-var dbUri = 'mongodb://localhost/test'
-jm.db.connect(dbUri)
-
-var model = jm.dao(
-  {
-    modelName: 'product',
-    schema: schema
-  }
-)
+const schema = new Schema(schemaDefine)
+const dbUri = 'mongodb://localhost/test'
+mongoose.connect(dbUri, {useNewUrlParser: true})
+const model = mongoose.model('product', schema)
 
 module.exports = model

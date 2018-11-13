@@ -1,60 +1,40 @@
 const _ = require('lodash')
-const event = require('jm-event')
 const MS = require('jm-ms-core')
+const dao = require('./dao')
 const ms = new MS()
 
-module.exports = function (dao, opts = {}) {
+module.exports = function (model, opts = {}) {
+  dao(model)
   let router = ms.router(opts)
-  event.enableEvent(dao, {
-    force: true,
-    async: true
-  })
 
   opts.list || (opts.list = {})
   opts.get || (opts.get = {})
 
-  dao.routes || (dao.routes = {})
-  let routes = dao.routes
+  const defaultOpts = opts
 
-  routes.opts = opts
-
-  const list = async function (opts) {
-    let doc = await dao.emit('before_list', opts)
+  const list = async function (opts = {}) {
+    let doc = await model.emit('before_list', opts)
     if (doc !== undefined) return doc
 
-    let optsList = _.cloneDeep(routes.opts.list)
-    let populations = opts.populations || optsList.populations || null
-    let page = opts.data.page
-    let rows = opts.data.rows
-    let conditions = opts.conditions || optsList.conditions || null
-    let options = opts.options || optsList.options || {}
-    let fields = opts.fields || optsList.fields || null
-    let sidx = opts.data.sidx
-    let sord = opts.data.sord
-    let lean = true
-    if (opts.lean === false) {
-      lean = false
-    } else if (optsList.lean === false) {
-      lean = false
-    }
-    if (sidx) {
-      options.sort = []
-      let o = {}
-      o[sidx] = -1
-      if (sord === 'asc') {
-        o[sidx] = 1
-      }
-      options.sort.push(o)
-    }
+    let optsList = _.cloneDeep(defaultOpts.list)
+    let {
+      conditions = optsList.conditions || null,
+      populations = optsList.populations || null,
+      options = optsList.options || {},
+      fields = optsList.fields || null,
+      data: {page, rows, sorter},
+      lean = true,
+    } = opts
 
-    doc = await dao.find2({
-      populations: populations,
-      conditions: conditions,
-      fields: fields,
-      options: options,
-      lean: lean,
-      page: page,
-      rows: rows
+    sorter && (options.sort = sorter.replace(',', ' '))
+    doc = await model.find2({
+      populations,
+      conditions,
+      fields,
+      options,
+      lean,
+      page,
+      rows
     })
     if (page || rows) {
     } else {
@@ -62,65 +42,63 @@ module.exports = function (dao, opts = {}) {
     }
 
     let ret = doc
-    doc = await dao.emit('list', opts, doc)
+    doc = await model.emit('list', opts, doc)
     if (doc !== undefined) return doc
     if (ret) return ret
   }
 
-  const get = async function (opts) {
-    let doc = await dao.emit('before_get', opts)
+  const get = async function (opts = {}) {
+    let doc = await model.emit('before_get', opts)
     if (doc !== undefined) return doc
 
-    let id = opts.params.id
-    let optsGet = _.cloneDeep(routes.opts.get)
-    let populations = opts.populations || optsGet.populations || null
-    let options = opts.options || optsGet.options || {}
-    let fields = opts.fields || optsGet.fields || null
-    let lean = true
-    if (opts.lean === false) {
-      lean = false
-    } else if (optsGet.lean === false) {
-      lean = false
-    }
-    doc = await dao.findById2(
+    let {id} = opts.params
+    let optsGet = _.cloneDeep(defaultOpts.get)
+    let {
+      populations = optsGet.populations || null,
+      options = optsGet.options || {},
+      fields = optsGet.fields || null,
+      lean = true,
+    } = opts
+
+    doc = await model.findById2(
       id,
       {
-        populations: populations,
-        fields: fields,
-        options: options,
-        lean: lean
+        populations,
+        fields,
+        options,
+        lean
       }
     )
 
     let ret = doc
-    doc = await dao.emit('get', opts, doc)
+    doc = await model.emit('get', opts, doc)
     if (doc !== undefined) return doc
     if (ret) return ret
   }
 
   const create = async function (opts) {
-    let doc = await dao.emit('before_create', opts)
+    let doc = await model.emit('before_create', opts)
     if (doc !== undefined) return doc
 
     let data = opts.data
-    doc = await dao.create(data)
+    doc = await model.create(data)
 
     let ret = doc
-    doc = await dao.emit('create', opts, doc)
+    doc = await model.emit('create', opts, doc)
     if (doc !== undefined) return doc
     if (ret) return ret
   }
 
   const update = async function (opts) {
-    let doc = await dao.emit('before_update', opts)
+    let doc = await model.emit('before_update', opts)
     if (doc !== undefined) return doc
 
     let id = opts.params.id
     let data = opts.data
-    doc = await dao.update({_id: id}, data)
+    doc = await model.updateOne({_id: id}, data)
 
     let ret = doc
-    doc = await dao.emit('update', opts, doc)
+    doc = await model.emit('update', opts, doc)
     if (doc !== undefined) return doc
     doc = ret
     if (doc) {
@@ -130,7 +108,7 @@ module.exports = function (dao, opts = {}) {
   }
 
   const remove = async function (opts) {
-    let doc = await dao.emit('before_remove', opts)
+    let doc = await model.emit('before_remove', opts)
     if (doc !== undefined) return doc
 
     let id = opts.params.id || opts.data.id
@@ -138,10 +116,10 @@ module.exports = function (dao, opts = {}) {
     } else {
       id = id.split(',')
     }
-    doc = await dao.remove({_id: {$in: id}})
+    doc = await model.deleteMany({_id: {$in: id}})
 
     let ret = doc
-    doc = await dao.emit('remove', opts, doc)
+    doc = await model.emit('remove', opts, doc)
     if (doc !== undefined) return doc
     doc = ret
     if (doc) {

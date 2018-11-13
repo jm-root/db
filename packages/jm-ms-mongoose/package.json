@@ -1,6 +1,6 @@
 {
   "name": "jm-ms-mongoose",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "mongoose router plugin for jm-ms",
   "main": "./lib/index",
   "scripts": {
@@ -24,10 +24,10 @@
   "homepage": "https://github.com/jm-root/db",
   "dependencies": {
     "jm-log4js": "^1.1.1",
-    "jm-ms-core": "^2.0.7"
+    "jm-ms-core": "^2.1.1"
   },
   "devDependencies": {
-    "jm-dao": "^1.0.0",
+    "mongoose": "^5.3.11",
     "jest": "^23.1.0"
   },
   "jest": {
