@@ -1,3 +1,3 @@
 # jm-ms-sequlize
 
-mongoose router plugin for jm-ms
+sequlize router plugin for jm-ms
