@@ -1,6 +1,6 @@
 {
   "name": "jm-ms-mongoose",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "mongoose router plugin for jm-ms",
   "main": "./lib/index",
   "scripts": {
