@@ -1,5 +1,5 @@
 {
-  "name": "jm-ms-sequlize",
+  "name": "jm-ms-sequelize",
   "version": "1.0.8",
   "description": "mongoose router plugin for jm-ms",
   "main": "./lib/index",
@@ -12,7 +12,7 @@
   },
   "keywords": [
     "javascript",
-    "jm-ms-sequlize"
+    "jm-ms-sequelize"
   ],
   "author": {
     "name": "Jeff YU"
