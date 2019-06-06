@@ -149,7 +149,6 @@ module.exports = function (dao, opts = {}) {
     try {
       doc = await dao.create(data, {transaction})
     } catch (e) {
-      console.log(e)
       error = e
       doc = e
     }
@@ -158,7 +157,13 @@ module.exports = function (dao, opts = {}) {
     doc = await dao.emit('create', opts, doc)
     if (doc !== undefined) return doc
     if (error) throw error
-    if (ret) return ret
+
+    if (ret) {
+      let plain = true
+      opts.plain === false && (plain = false)
+      plain && (ret = ret.get({plain: true}))
+      return ret
+    }
   }
 
   const update = async function (opts) {

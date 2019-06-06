@@ -1,6 +1,6 @@
 {
   "name": "jm-ms-sequelize",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "mongoose router plugin for jm-ms",
   "main": "./lib/index",
   "scripts": {
@@ -27,7 +27,7 @@
     "jm-ms-core": "^2.1.1"
   },
   "devDependencies": {
-    "sequelize": "^4.38.0",
+    "sequelize": "^5.8.7",
     "mysql2": "^1.6.1",
     "jest": "^23.1.0"
   },

@@ -21,6 +21,7 @@ describe('router', async () => {
         content: '内容'
       })
     id = doc.id
+    console.log(doc)
 
     expect(doc).toBeTruthy()
   })

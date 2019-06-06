@@ -10,16 +10,14 @@ let DB = function (opts = {}) {
       idle: 30000
     },
     dialectOptions: {
-      supportBigNumbers: true,
-      bigNumberStrings: true
+      supportBigNumbers: true
     },
     define: {
       charset: 'utf8mb4',
       dialectOptions: {
         collate: 'utf8mb4_unicode_ci'
       }
-    },
-    operatorsAliases: false
+    }
   }
 
   return new Sequelize(opts.db, o)
