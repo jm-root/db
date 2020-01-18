@@ -1,7 +1,7 @@
 {
   "name": "jm-ms-sequelize",
   "version": "1.0.9",
-  "description": "mongoose router plugin for jm-ms",
+  "description": "sequelize router plugin for jm-ms",
   "main": "./lib/index",
   "scripts": {
     "test": "jest"
