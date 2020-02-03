@@ -69,7 +69,7 @@ module.exports = function (dao, opts = {}) {
         }
       } else {
         doc = await dao.findAll(o)
-        doc = {rows: doc}
+        doc = { rows: doc }
       }
     } catch (e) {
       console.log(e)
@@ -80,7 +80,7 @@ module.exports = function (dao, opts = {}) {
     if (plain !== false && doc.rows) {
       let rows = []
       doc.rows.forEach(item => {
-        rows.push(item.get({plain: true}))
+        rows.push(item.get({ plain: true }))
       })
       doc.rows = rows
     }
@@ -108,7 +108,7 @@ module.exports = function (dao, opts = {}) {
     opts.plain === false && (plain = false)
     let transaction = opts.transaction
 
-    conditions = {id, ...conditions}
+    conditions = { id, ...conditions }
 
     let o = {
       where: conditions,
@@ -130,7 +130,7 @@ module.exports = function (dao, opts = {}) {
       doc = e
     }
 
-    if (plain !== false && doc) doc = doc.get({plain: true})
+    if (plain !== false && doc) doc = doc.get({ plain: true })
     let ret = doc
     doc = await dao.emit('get', opts, doc)
     if (doc !== undefined) return doc
@@ -147,7 +147,7 @@ module.exports = function (dao, opts = {}) {
     let data = opts.data
     let error
     try {
-      doc = await dao.create(data, {transaction})
+      doc = await dao.create(data, { transaction })
     } catch (e) {
       error = e
       doc = e
@@ -161,7 +161,7 @@ module.exports = function (dao, opts = {}) {
     if (ret) {
       let plain = true
       opts.plain === false && (plain = false)
-      plain && (ret = ret.get({plain: true}))
+      plain && (ret = ret.get({ plain: true }))
       return ret
     }
   }
@@ -176,7 +176,7 @@ module.exports = function (dao, opts = {}) {
     let data = opts.data
     let error
     try {
-      doc = await dao.update(data, {where: {id: id}, transaction})
+      doc = await dao.update(data, { where: { id: id }, transaction })
     } catch (e) {
       console.log(e)
       error = e
@@ -187,7 +187,7 @@ module.exports = function (dao, opts = {}) {
     doc = await dao.emit('update', opts, doc)
     if (doc !== undefined) return doc
     if (error) throw error
-    if (ret) return {ret: ret[0]}
+    if (ret) return { ret: ret[0] }
   }
 
   const remove = async function (opts) {
@@ -204,7 +204,7 @@ module.exports = function (dao, opts = {}) {
 
     let error
     try {
-      doc = await dao.destroy({where: {id: {[Op.in]: id}}, transaction})
+      doc = await dao.destroy({ where: { id: { [Op.in]: id } }, transaction })
     } catch (e) {
       console.log(e)
       error = e
@@ -215,7 +215,7 @@ module.exports = function (dao, opts = {}) {
     doc = await dao.emit('remove', opts, doc)
     if (doc !== undefined) return doc
     if (error) throw error
-    if (ret !== undefined) return {ret: ret}
+    if (ret !== undefined) return { ret: ret }
   }
 
   router.use(opts => {

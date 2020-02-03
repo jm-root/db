@@ -22,8 +22,8 @@ module.exports = function (model, opts = {}) {
       populations = optsList.populations || null,
       options = optsList.options || {},
       fields = optsList.fields || null,
-      data: {page, rows, sorter},
-      lean = true,
+      data: { page, rows, sorter },
+      lean = true
     } = opts
 
     sorter && (options.sort = sorter.replace(',', ' '))
@@ -38,7 +38,7 @@ module.exports = function (model, opts = {}) {
     })
     if (page || rows) {
     } else {
-      doc = {rows: doc}
+      doc = { rows: doc }
     }
 
     let ret = doc
@@ -51,13 +51,13 @@ module.exports = function (model, opts = {}) {
     let doc = await model.emit('before_get', opts)
     if (doc !== undefined) return doc
 
-    let {id} = opts.params
+    let { id } = opts.params
     let optsGet = _.cloneDeep(defaultOpts.get)
     let {
       populations = optsGet.populations || null,
       options = optsGet.options || {},
       fields = optsGet.fields || null,
-      lean = true,
+      lean = true
     } = opts
 
     doc = await model.findById2(
@@ -95,14 +95,14 @@ module.exports = function (model, opts = {}) {
 
     let id = opts.params.id
     let data = opts.data
-    doc = await model.updateOne({_id: id}, data)
+    doc = await model.updateOne({ _id: id }, data)
 
     let ret = doc
     doc = await model.emit('update', opts, doc)
     if (doc !== undefined) return doc
     doc = ret
     if (doc) {
-      if (doc.ok) doc = {ret: doc.n, modified: doc.nModified}
+      if (doc.ok) doc = { ret: doc.n, modified: doc.nModified }
       return doc
     }
   }
@@ -116,14 +116,14 @@ module.exports = function (model, opts = {}) {
     } else {
       id = id.split(',')
     }
-    doc = await model.deleteMany({_id: {$in: id}})
+    doc = await model.deleteMany({ _id: { $in: id } })
 
     let ret = doc
     doc = await model.emit('remove', opts, doc)
     if (doc !== undefined) return doc
     doc = ret
     if (doc) {
-      if (doc.result && doc.result.ok) doc = {ret: doc.result.n}
+      if (doc.result && doc.result.ok) doc = { ret: doc.result.n }
       return doc
     }
   }

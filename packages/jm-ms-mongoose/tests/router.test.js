@@ -43,7 +43,7 @@ describe('router', async () => {
       return {}
     })
       .on('get', async (opts, doc) => {
-        return {ret: '123'}
+        return { ret: '123' }
       })
     let doc = await router.get(`/5b51919baf78383a8cfd7ec8`)
     console.log(doc)

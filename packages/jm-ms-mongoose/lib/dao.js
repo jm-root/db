@@ -16,7 +16,7 @@ module.exports = function (model) {
    }
    */
   model.findOne2 = async function (opts = {}) {
-    const {conditions = {}, fields = null, populations = null, options = null, lean} = opts
+    const { conditions = {}, fields = null, populations = null, options = null, lean } = opts
     var q = this.findOne(conditions, fields, options)
     lean && q.lean()
     populations && q.populate(populations)
@@ -24,7 +24,7 @@ module.exports = function (model) {
   }
 
   model.findById2 = async function (id, opts = {}) {
-    opts.conditions = {_id: id}
+    opts.conditions = { _id: id }
     return this.findOne2(opts)
   }
 
@@ -41,7 +41,7 @@ module.exports = function (model) {
    */
 
   model.find2 = async function (opts = {}) {
-    let {conditions = {}, fields = null, populations = null, options = {}, page, rows, lean} = opts
+    let { conditions = {}, fields = null, populations = null, options = {}, page, rows, lean } = opts
 
     if (page || rows) {
       page || (page = 1)
