@@ -1,6 +1,6 @@
 {
   "name": "jm-ms-mongoose",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "mongoose router plugin for jm-ms",
   "main": "./lib/index",
   "scripts": {
@@ -22,13 +22,10 @@
     "url": "https://github.com/jm-root/db/issues"
   },
   "homepage": "https://github.com/jm-root/db",
-  "dependencies": {
-    "jm-log4js": "^1.1.1",
-    "jm-ms-core": "^2.1.1"
-  },
+  "dependencies": {  },
   "devDependencies": {
-    "mongoose": "^5.3.11",
-    "jest": "^23.1.0"
+    "jm-ms-core": "^2.2.0",
+    "mongoose": "^5.3.11"
   },
   "jest": {
     "testEnvironment": "node"

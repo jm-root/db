@@ -1,6 +1,6 @@
 {
   "name": "jm-ms-sequelize",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "sequelize router plugin for jm-ms",
   "main": "./lib/index",
   "scripts": {
@@ -22,14 +22,11 @@
     "url": "https://github.com/jm-root/db/issues"
   },
   "homepage": "https://github.com/jm-root/db",
-  "dependencies": {
-    "jm-log4js": "^1.1.1",
-    "jm-ms-core": "^2.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "jm-ms-core": "^2.2.0",
     "sequelize": "^5.8.7",
-    "mysql2": "^1.6.1",
-    "jest": "^23.1.0"
+    "mysql2": "^1.6.1"
   },
   "jest": {
     "testEnvironment": "node"
